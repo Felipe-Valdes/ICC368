@@ -1,9 +1,11 @@
 package com.example.crud_ICC368.entity;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Exhibicion")
@@ -24,10 +26,17 @@ public class Exhibicion {
     @Column(name = "descripcion")
     private String descripcion;
 
-    // Getters y setters
+    @Setter
+    @Getter
+    @ManyToMany(mappedBy = "exhibiciones")
+    private Set<Museo> museos = new HashSet<>();
+
+    @Setter
+    @Getter
+    @ManyToMany(mappedBy = "exhibiciones")
+    private Set<Artefacto> artefactos = new HashSet<>();
+
     public Long getId() {
         return id;
     }
-
-
 }

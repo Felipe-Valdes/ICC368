@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "Museo")
 public class Museo {
@@ -12,7 +15,6 @@ public class Museo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
 
     @Setter
     @Getter
@@ -24,9 +26,17 @@ public class Museo {
     @Column(name = "ubicacion")
     private String ubicacion;
 
-    public long getId() {
+    @Setter
+    @Getter
+    @ManyToMany
+    @JoinTable(
+            name = "Museo_Exhibicion",
+            joinColumns = @JoinColumn(name = "Museoid"),
+            inverseJoinColumns = @JoinColumn(name = "Exhibicionid")
+    )
+    private Set<Exhibicion> exhibiciones = new HashSet<>();
+
+    public Long getId() {
         return id;
     }
-
-
 }

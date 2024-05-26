@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "Artefacto")
 public class Artefacto {
@@ -28,11 +31,18 @@ public class Artefacto {
     @Column(name = "imagen")
     private String imagen;
 
-    // Getters y setters
+    @Setter
+    @Getter
+    @ManyToMany
+    @JoinTable(
+            name = "Artefacto_Exhibicion",
+            joinColumns = @JoinColumn(name = "Artefactoid"),
+            inverseJoinColumns = @JoinColumn(name = "Exhibicionid")
+    )
+    private Set<Exhibicion> exhibiciones = new HashSet<>();
+
     public Long getId() {
         return id;
     }
-
-
 }
 

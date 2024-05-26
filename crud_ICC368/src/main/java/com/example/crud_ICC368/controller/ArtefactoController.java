@@ -1,6 +1,5 @@
 package com.example.crud_ICC368.controller;
 
-
 import com.example.crud_ICC368.entity.Artefacto;
 import com.example.crud_ICC368.service.ArtefactoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +48,4 @@ public class ArtefactoController {
         artefactoService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
-
 }
