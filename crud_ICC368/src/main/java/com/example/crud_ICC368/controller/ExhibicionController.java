@@ -50,3 +50,4 @@ public class ExhibicionController {
         return ResponseEntity.noContent().build();
     }
 }
+

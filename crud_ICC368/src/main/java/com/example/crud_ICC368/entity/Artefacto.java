@@ -28,6 +28,11 @@ public class Artefacto {
 
     @Setter
     @Getter
+    @Column(name = "familia")
+    private String familia;
+
+    @Setter
+    @Getter
     @Column(name = "imagen")
     private String imagen;
 
