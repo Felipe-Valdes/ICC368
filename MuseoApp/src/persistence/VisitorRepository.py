@@ -1,5 +1,3 @@
-# src/persistence_layer/data_access.py
-
 from sqlalchemy import create_engine
 import pandas as pd
 from src.database.config import CONNECTION_STRING
@@ -33,7 +31,7 @@ class VisitorRepository:
         """
         return pd.read_sql_query(query, self.engine, params=(fecha_inicio, fecha_termino))
 
-    # Requerimiento 4s
+    # Requerimiento 4
     # Obtiene a los visitantes en un rango de fechas.
     def get_visitors_by_date_range(self, start_date, end_date):
         query = """
@@ -50,6 +48,24 @@ class VisitorRepository:
                     Fecha;
                 """
         return pd.read_sql_query(query, self.engine, params=(start_date, end_date))
+
+
+    # Requerimiento 6
+    # Obtiene al numero de visitantes por año y mes.
+    def get_visitors_by_year_month(self):
+        query = """
+        SELECT 
+            YEAR(Recorrido.fechaInicio) AS Anio,
+            MONTH(Recorrido.fechaInicio) AS Mes,
+            COUNT(DISTINCT Recorrido.Usuarioid) AS Cantidad_Visitantes
+        FROM 
+            Recorrido
+        GROUP BY 
+            Anio, Mes
+        ORDER BY 
+            Anio, Mes;
+        """
+        return pd.read_sql_query(query, self.engine)
 
     # Requerimiento 8
     # Obtiene a los visitantes ordenados por cantidad de asistencias a las exhibiciones.
@@ -69,6 +85,3 @@ class VisitorRepository:
             Numero_Asistencias DESC;
         """
         return pd.read_sql_query(query, self.engine)
-    
-
-
