@@ -1,1 +1,3 @@
 __pycache__/
+.vscode/
+MuseoApp/Museo.session.sql
