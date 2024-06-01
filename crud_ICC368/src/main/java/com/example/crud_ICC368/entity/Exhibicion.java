@@ -28,13 +28,8 @@ public class Exhibicion {
 
     @Setter
     @Getter
-    @Column(name = "convenio")
-    private String convenio;
-
-    @Setter
-    @Getter
-    @Column(name = "tematica")
-    private String tematica;
+    @ManyToMany(mappedBy = "exhibiciones")
+    private Set<Museo> tematicas = new HashSet<>();
 
     @Setter
     @Getter

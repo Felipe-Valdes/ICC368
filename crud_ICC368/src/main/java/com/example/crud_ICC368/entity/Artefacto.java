@@ -28,11 +28,6 @@ public class Artefacto {
 
     @Setter
     @Getter
-    @Column(name = "familia")
-    private String familia;
-
-    @Setter
-    @Getter
     @Column(name = "imagen")
     private String imagen;
 
@@ -45,6 +40,16 @@ public class Artefacto {
             inverseJoinColumns = @JoinColumn(name = "Exhibicionid")
     )
     private Set<Exhibicion> exhibiciones = new HashSet<>();
+
+    @Setter
+    @Getter
+    @ManyToMany
+    @JoinTable(
+            name = "Artefacto_Familia",
+            joinColumns = @JoinColumn(name = "Artefactoid"),
+            inverseJoinColumns = @JoinColumn(name = "Familiaid")
+    )
+    private Set<Familia> familias = new HashSet<>();
 
     public Long getId() {
         return id;
