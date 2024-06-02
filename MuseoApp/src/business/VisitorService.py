@@ -1,5 +1,4 @@
 import src.persistence.VisitorRepository as VisitorRepository
-import pandas as pd
 
 class VisitorService:
 
@@ -30,18 +29,21 @@ class VisitorService:
         # Parsea los datos a json
         return visitors.to_json(orient='records')
     
-    # Requerimiento adicional
     # Calcula el crecimiento de visitantes en porcentaje entre periodos de tiempo.
     def visitors_growth_percentage(self, start_date, end_date, periodo='month'):
         visitors = self.visitor_repository.get_visitors_by_date_range(start_date, end_date, periodo)
+        
         # Calcular el porcentaje de crecimiento
         growth_percentage = visitors['Cantidad_Visitantes'].pct_change() * 100
-    
-        # Crear un nuevo DataFrame con los resultados
-        growth_df = pd.DataFrame({
-        'Fecha': visitors['Fecha'].iloc[1:],  # Excluir la primera fila ya que no tiene un periodo anterior para calcular el crecimiento
-        'Cantidades_Visitantes': visitors['Cantidad_Visitantes'].iloc[1:],  # Excluir la primera fila ya que no tiene un periodo anterior para calcular el crecimiento
-        'Crecimiento_Porcentaje': growth_percentage.iloc[1:]  # Excluir la primera fila ya que no tiene un periodo anterior para calcular el crecimiento
-    })
-    
-        return growth_df
+        
+        # Crear una lista de diccionarios con los resultados
+        growth_list = []
+        for i in range(1, len(visitors)):
+            growth_dict = {
+                'Fecha': visitors['Fecha'].iloc[i],
+                'Cantidades_Visitantes': visitors['Cantidad_Visitantes'].iloc[i],
+                'Crecimiento_Porcentaje': growth_percentage.iloc[i]
+            }
+            growth_list.append(growth_dict)
+        
+        return growth_list
