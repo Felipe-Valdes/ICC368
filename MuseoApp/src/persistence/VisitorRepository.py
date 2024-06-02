@@ -31,12 +31,24 @@ class VisitorRepository:
         """
         return pd.read_sql_query(query, self.engine, params=(fecha_inicio, fecha_termino))
 
-    # Requerimiento 4
+    # Requerimientos 4 (6)
     # Obtiene a los visitantes en un rango de fechas.
-    def get_visitors_by_date_range(self, start_date, end_date):
-        query = """
+    def get_visitors_by_date_range(self, start_date, end_date, periodo='day'):
+        # Determinar la forma de agrupar según el periodo
+        if periodo.lower() == 'day':
+            group_by = "DATE(Recorrido.fechaInicio)"
+        elif periodo.lower() == 'week':
+            group_by = "YEARWEEK(Recorrido.fechaInicio, 1)"  # Agrupar por semana (inicio de semana el lunes)
+        elif periodo.lower() == 'month':
+            group_by = "DATE_FORMAT(Recorrido.fechaInicio, '%%Y-%%m')"  # Escapar signos de porcentaje
+        elif periodo.lower() == 'year':
+            group_by = "YEAR(Recorrido.fechaInicio)"  # Agrupar por año
+        else:
+            raise ValueError("El periodo debe ser 'day', 'week', 'month' o 'year'")
+
+        query = f"""
                 SELECT 
-                    DATE(Recorrido.fechaInicio) AS Fecha,
+                    {group_by} AS Fecha,
                     COUNT(DISTINCT Recorrido.Usuarioid) AS Cantidad_Visitantes
                 FROM 
                     Recorrido
