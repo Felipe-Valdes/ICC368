@@ -106,3 +106,10 @@ class ArtefactRepository:
             ORDER BY F.nombre, A.nombre;
         """
         return pd.read_sql_query(query, self.engine)
+    
+    # Obtener solo todos los artefactos
+    def get_artefacts(self):
+        query = """
+        SELECT * FROM Artefacto;
+        """
+        return pd.read_sql_query(query, self.engine)

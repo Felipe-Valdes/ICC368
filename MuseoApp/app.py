@@ -24,6 +24,15 @@ visitor_repo = VisitorRepository()
 
 # Rutas de la aplicación Flask
 
+@app.route('/artefacts', methods=['GET'])
+def get_artefacts():
+    try:
+        artefacts = artefact_repo.get_artefacts()
+        return jsonify(artefacts.to_dict(orient='records')), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/artefacts/exhibitions', methods=['GET'])
 def get_artefacts_and_exhibitions():
     try:
