@@ -29,7 +29,7 @@ class VisitorService:
         # Parsea los datos a json
         return visitors.to_json(orient='records')
     
-    # Calcula el crecimiento de visitantes en porcentaje entre periodos de tiempo.
+    # Requerimiento 6: Calcula el crecimiento de visitantes en porcentaje entre periodos de tiempo.
     def visitors_growth_percentage(self, start_date, end_date, periodo='month'):
         visitors = self.visitor_repository.get_visitors_by_date_range(start_date, end_date, periodo)
         
@@ -38,10 +38,10 @@ class VisitorService:
         
         # Crear una lista de diccionarios con los resultados
         growth_list = []
-        for i in range(1, len(visitors)):
+        for i in range(len(visitors)):
             growth_dict = {
                 'Fecha': visitors['Fecha'].iloc[i],
-                'Cantidades_Visitantes': visitors['Cantidad_Visitantes'].iloc[i],
+                'Cantidad_Visitantes': int(visitors['Cantidad_Visitantes'].iloc[i]),  # Asegura que sea int
                 'Crecimiento_Porcentaje': growth_percentage.iloc[i]
             }
             growth_list.append(growth_dict)
