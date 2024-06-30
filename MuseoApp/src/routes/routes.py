@@ -17,7 +17,13 @@ visitor_repo = VisitorRepository()
 # Inicializa el servicio de visitantes
 visitor_service = VisitorService()
 
-
+# Usa CORS para permitir solicitudes desde cualquier origen
+@bp_routes.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE')
+    return response
 
 # Requerimiento 1: Obtener la lista de visitantes y exposiciones entre dos fechas ordenadas por fecha de inicio de la exposición
 @bp_routes.route('/visitors-and-exhibitions', methods=['GET'])
@@ -115,20 +121,10 @@ def get_artefacts_by_family():
 @bp_routes.route('/visitors-growth-rate', methods=['GET'])
 def get_visitors_growth_rate():
     try:
-        start_date = request.args.get('start_date', default=None, type=str)
-        end_date = request.args.get('end_date', default=None, type=str)
-        period = request.args.get('period', default='month', type=str)
-
-        if not start_date or not end_date:
-            return jsonify({'error': 'start_date and end_date are required'}), 400
-
         # Obtener el porcentaje de crecimiento de visitantes
-        growth_data = visitor_service.visitors_growth_percentage(start_date, end_date, period)
-        
-        # Convertir tipos de datos para ser serializables a JSON
-        for entry in growth_data:
-            entry['Cantidad_Visitantes'] = int(entry['Cantidad_Visitantes'])  # Convertir a int si es necesario
-        
+        growth_data = visitor_service.get_json_visitors_growth_percentage()
+        print(growth_data)
+        print(jsonify(growth_data), 200)
         return jsonify(growth_data), 200
 
     except Exception as e:
@@ -177,13 +173,10 @@ def get_expositions_with_tours_between_dates():
 def get_visitors_ordered_by_attendances():
     try:
         # Obtener los visitantes ordenados por cantidad de recorridos
-        visitors_ordered = visitor_repo.get_visitors_ordered_by_number_of_attendances()
-        
-        # Convertir el DataFrame a una lista de diccionarios
-        visitors_list = visitors_ordered.to_dict(orient='records')
+        visitors_ordered = visitor_service.get_json_visitors_ordered_by_number_of_attendances()
         
         # Devolver la lista como JSON
-        return jsonify(visitors_list), 200
+        return jsonify(visitors_ordered), 200
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500
